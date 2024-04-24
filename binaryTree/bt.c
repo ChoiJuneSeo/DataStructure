@@ -1,34 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// 구조체 이름 바꾸는게 좋을 듯.
 typedef struct binarytreeNode
 {
 	int data;
 	struct binarytreeNode* lchild;
 	struct binarytreeNode* rchild;
-}node;
+}bt;
 
-node* createBTN()
+bt* createBTN()
 {
-	node* newNode = (node*)malloc(sizeof(node));
+	bt* newNode = (bt*)malloc(sizeof(bt));
 	newNode->data = 0;
 	newNode->lchild = NULL;
 	newNode->rchild = NULL;
 	return newNode;
 };
-void setNodeData(node* node, int data)
+void setNodeData(bt* n, int data)
 {
-	node->data = data;
+	n->data = data;
 };
-void removeSubTree(node* node)
+void removeSubTree(bt* n)
 {
-	if (node == NULL) return;
-	removeSubTree(node->lchild);
-	removeSubTree(node->rchild);
-	free(node);
+	if (n == NULL) return;
+	removeSubTree(n->lchild);
+	removeSubTree(n->rchild);
+	free(n);
 };
-void setLeftSubTree(node* parent,node* lchild)
+void setLeftSubTree(bt* parent,bt* lchild)
 {
 	if (parent->lchild != NULL)
 	{
@@ -36,7 +35,7 @@ void setLeftSubTree(node* parent,node* lchild)
 	}
 	parent->lchild = lchild;
 };
-void setRightSubTree(node* parent,node* rchild)
+void setRightSubTree(bt* parent,bt* rchild)
 {
 	if (parent->rchild != NULL)
 	{
@@ -45,18 +44,43 @@ void setRightSubTree(node* parent,node* rchild)
 	parent->rchild = rchild;
 };
 
-int getNodeData(node* node)
+int getNodeData(bt* n)
 {
-	return node->data;
+	return n->data;
 }
+
+// 전위 탐색		p-> l -> r
+void preorderTraversal(bt* n)
+{
+	if (n == NULL) return;
+	printf("%d ", n->data);
+	preorderTraversal(n->lchild);
+	preorderTraversal(n->rchild);
+};
+// 중위 탐색		l -> p -> r
+void inorderTraversal(bt* n)
+{
+	if (n == NULL) return;
+	inorderTraversal(n->lchild);
+	printf("%d ", n->data);
+	inorderTraversal(n->rchild);
+};
+// 후위 탐색		l -> r -> p
+void postorderTraversal(bt* n)
+{
+	if (n == NULL) return;
+	postorderTraversal(n->lchild);
+	postorderTraversal(n->rchild);
+	printf("%d ", n->data);
+};
 
 
 void main()
 {
-	node* root = createBTN(); 
-	node* leftNode = createBTN(); 
-	node* rightNode = createBTN(); 
-	node* leftLeftNode = createBTN();
+	bt* root = createBTN(); 
+	bt* leftNode = createBTN(); 
+	bt* rightNode = createBTN(); 
+	bt* leftLeftNode = createBTN();
 
 
 	setNodeData(root, 1);
@@ -73,4 +97,12 @@ void main()
 	printf("%d\n", getNodeData(root->rchild));
 	printf("%d\n", getNodeData(root->lchild->lchild));
 
+
+	printf("\n==================\n"); 
+	preorderTraversal(root); 
+	printf("\n==================\n"); 
+	inorderTraversal(root); 
+	printf("\n==================\n"); 
+	postorderTraversal(root); 
+	removeSubTree(root); 
 }
